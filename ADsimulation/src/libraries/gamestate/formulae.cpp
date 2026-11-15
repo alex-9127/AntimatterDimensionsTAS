@@ -151,3 +151,35 @@ int32_t getAmountForGalaxy(int32_t galaxyTarget) {
 int32_t getDimboostsForAmount(int32_t tier8amount) {
     return (tier8amount - 20) / 15 + 5;
 }
+
+int32_t getDimboostsForAM(const GameState& st, Decimal amTarget) {
+    int32_t low = 0;
+    int32_t high = 100000000;
+    while (low < high) {
+        int32_t db = (low + high + 1) / 2;
+        const Dimension& dimNeeded = st.AD()[getTierForDimboost(db)];
+        int32_t dimAmountRequied = getAmountForDimboost(db);
+        if (getCostForDimPurchases(dimNeeded.getCostRule(), dimAmountRequied) <= amTarget) {
+            low = db;
+        } else {
+            high = db - 1;
+        }
+    }
+    return low;
+}
+
+int32_t getGalaxiesForAM(const GameState& st, Decimal amTarget) {
+    int32_t low = 0;
+    int32_t high = 1048576;
+    while (low < high) {
+        int32_t ag = (low + high + 1) / 2;
+        const Dimension& dimNeeded = st.AD()[8];
+        int32_t dimAmountRequied = getAmountForGalaxy(ag);
+        if (getCostForDimPurchases(dimNeeded.getCostRule(), dimAmountRequied) <= amTarget) {
+            low = ag;
+        } else {
+            high = ag - 1;
+        }
+    }
+    return low;
+}

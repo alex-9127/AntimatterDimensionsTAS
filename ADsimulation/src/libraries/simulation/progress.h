@@ -52,11 +52,11 @@ class Progress {
             );
         }
 
-        static Progress untilInfinity() {
+        static Progress untilAntimatter(const Decimal& target) {
             return Progress(
-                [](const GameState& st) {return st.canCrunch();}, 
-                [](const GameState& st) {
-                    return st.antimatterThisReset().log10value() / DC::INF.log10value();
+                [target](const GameState& st) {return st.maxAntimatterThisInfinity() >= target;}, 
+                [target](const GameState& st) {
+                    return st.maxAntimatterThisInfinity().log10value() / target.log10value();
                 }
             );
         }

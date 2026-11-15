@@ -28,7 +28,7 @@ ExponentialCostScaling::ExponentialCostScaling(
     {}
 
 Decimal ExponentialCostScaling::getCost(int32_t purchases) const {
-    int32_t excess = purchases - purchasesBeforeScaling;
+    int64_t excess = purchases - purchasesBeforeScaling;
     double logPrice = logBaseCost + logBaseIncrease * purchases;
     if (excess > 0) logPrice += 0.5 * excess * (excess + 1) * logCostScale;
     return Decimal::pow(DC::D10, logPrice);

@@ -547,13 +547,16 @@ GameInstance runGalaxy(
 }
 
 GameInstance runInfinity(
-    GameState st, bool useSacrifice, bool verbose
+    GameState st, bool useSacrifice, bool verbose, Decimal target
 ) {
     GameInstance result = runUntil(
-        st, Progress::untilInfinity(), useSacrifice, verbose
+        st, Progress::untilAntimatter(target), useSacrifice, verbose
     );
     GameState last = result.game();
-    if (!last.achievements().isUnlocked(32) && last.canSacrifice() && last.getBoostAfterSacrifice() >= DC::D600) {
+    if (
+        result.game().canCrunch() && !last.achievements().isUnlocked(32) && 
+        last.canSacrifice() && last.getBoostAfterSacrifice() >= DC::D600
+    ) {
         result.addInstructions({Instruction::Sacrifice, DC::D600.log10value()});
         result.runNextInstructions();
     }
