@@ -39,22 +39,24 @@ struct InputData {
         }
     }
 
-    void saveResult(const std::map<int32_t, GameInstance>& routes) {
+    void saveResult(const SearchResults& results) {
         std::cout << "Finished simulation; dumping result game state into temporary files" << std::endl;
         if (saveCommands) std::cout << "Command sequences will also be saved in temporary files" << std::endl;
-        size_t writtenSegments = 0;
-        bool isFinal;
-        for (const auto& [i, instance] : routes) {
-            isFinal = writtenSegments + 1 == routes.size();
+        for (const auto& [i, instance] : results.routes) {
             std::ofstream save_out = std::ofstream(
-                isFinal ? outputFile : "save_tmp_d" + std::to_string(i) + ".json");
+                "save_tmp_g" + std::to_string(i.first) + "d" + std::to_string(i.second) + ".json");
             save_out << instance.game().to_json();
-            if (saveCommands) {
+            if (saveCommands && !instance.queue().getCompletedInstructions().empty()) {
                 std::ofstream cmd_out = std::ofstream(
-                    isFinal ? cmdOutFile : "cmd_tmp_d" + std::to_string(i - 1) + ".json");
+                    "cmd_tmp_to_g" + std::to_string(i.first) + "d" + std::to_string(i.second) + ".json");
                 writeInstructions(cmd_out, instance.queue());
             }
-            writtenSegments++;
+        }
+        std::ofstream save_out = std::ofstream(outputFile);
+        save_out << results.finalSegment.game().to_json();
+        if (saveCommands) {
+            std::ofstream cmd_out = std::ofstream(cmdOutFile);
+            writeInstructions(cmd_out, results.finalSegment.queue());
         }
     }
 };

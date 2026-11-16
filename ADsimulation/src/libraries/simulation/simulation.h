@@ -132,9 +132,21 @@ GameInstance runDimboost(GameState st, bool useSacrifice, bool verbose=true);
 GameInstance runGalaxy(GameState st, bool useSacrifice, bool verbose=true,
     std::function<bool(const SimulationHelpers::SegmentSearch&)> earlyStopCondition=
         [](const SimulationHelpers::SegmentSearch&) {return false;});
-GameInstance runInfinity(GameState st, bool useSacrifice, bool verbose=true, Decimal target=DC::INF);
+GameInstance runInfinity(GameState st, bool useSacrifice, bool verbose=true, Decimal target=DC::INF,
+    std::function<bool(const SimulationHelpers::SegmentSearch&)> earlyStopCondition=
+        [](const SimulationHelpers::SegmentSearch&) {return false;});
 GameInstance runUntil(GameState st, const Progress& progress, bool useSacrifice, bool verbose,
     std::function<bool(const SimulationHelpers::SegmentSearch&)> earlyStopCondition=
         [](const SimulationHelpers::SegmentSearch&) {return false;});
 
-std::map<int32_t, GameInstance> runFullGalaxy(GameState st, bool useSacrifice, bool verbose=true);
+struct SearchResults {
+    using Position = std::pair<int32_t, int32_t>;
+    std::map<Position, GameInstance> routes;
+    int64_t bestTime = INT64_MAX;
+    GameInstance finalSegment;
+};
+
+SearchResults runFullGalaxy(GameState st, bool useSacrifice, bool verbose=true);
+SearchResults runFullInfinity(
+    GameState st, bool useSacrifice, bool verbose=true, Decimal target=DC::INF
+);

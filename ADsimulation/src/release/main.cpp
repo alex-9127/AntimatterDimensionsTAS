@@ -25,8 +25,8 @@ int main(int argc, char* argv[]) {
             break;
         }
         case NextGalaxy: {
-            map<int32_t, GameInstance> routes = runFullGalaxy(data.gameState, data.useSacrifice);
-            data.saveResult(routes);
+            SearchResults results = runFullGalaxy(data.gameState, data.useSacrifice);
+            data.saveResult(results);
             break;
         }
         case ForceNextGalaxy: {
@@ -35,7 +35,8 @@ int main(int argc, char* argv[]) {
             break;
         }
         case NextInfinity: {
-            cout << "Not implemented yet" << endl;
+            SearchResults results = runFullInfinity(data.gameState, data.useSacrifice);
+            data.saveResult(results);
             break;
         }
         case ForceNextInfinity: {
