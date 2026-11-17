@@ -131,8 +131,8 @@ inline InputData getInputFromCmd(int argc, char* argv[]) {
     if (t < 0 || t > 4) return cancel(result);
     if (t == 2 && result.gameState.dimensionBoosts() < 4) return cancel(result);
     result.runType = (RunType) t;
-    if (t == 1 || result.gameState.dimensionBoosts() >= 5) {
-        if (t == 1) {
+    if (t == 1 || t == 3 || result.gameState.dimensionBoosts() >= 5) {
+        if (t == 1 || t == 3) {
             std::cout << "This will run segments where sacrifice is unlocked. Do you want to use sacrifice? [Y/n] ";
         } else {
             std::cout << "Input game state has 5 dimension boosts or more. Do you want to use sacrifice? [Y/n] ";
