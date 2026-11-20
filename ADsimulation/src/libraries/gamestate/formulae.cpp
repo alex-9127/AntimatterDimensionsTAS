@@ -23,7 +23,7 @@ const function<bool(const GameState&)> AchConstants::unlockConditions[] = {
     NOT_APPLICABLE,
     NOT_APPLICABLE,
 
-    NOT_IMPLEMENTED_YET,
+    NOT_APPLICABLE,
     ALWAYS_UNLOCKED,
     [](const GameState& st) {return st.AD()[8].getPurchases() == 99;},
     [](const GameState& st) {return st.antimatter() >= DC::D1E80;},
@@ -51,7 +51,7 @@ const function<bool(const GameState&)> AchConstants::unlockConditions[] = {
     NOT_IMPLEMENTED_YET,
     [](const GameState& st) {
         return st.antimatter() >= DC::D1E63 && 
-            st.AD()[1].productionPerSecond(st.tickspeed()) > st.antimatter();
+            st.AD()[1].productionPerSecond(st.tickspeed(), st.getAMcap()) > st.antimatter();
     },
     [](const GameState& st) {
         for (int i = 1; i <= 7; i++) {
@@ -129,7 +129,7 @@ Decimal getTotalTickspeed(const GameState& st) {
 }
 
 Decimal getSacrificeExponent(const GameState& st) {
-    return DC::D2 * st.achievements().effectOrDefault(32);
+    return DC::D2 * (DC::D1 + st.achievements().effectOrDefault(32));
 }
 
 Decimal getCostForDimPurchases(const ExponentialCostScaling& costRule, int32_t dimTarget) {
@@ -150,4 +150,36 @@ int32_t getAmountForGalaxy(int32_t galaxyTarget) {
 
 int32_t getDimboostsForAmount(int32_t tier8amount) {
     return (tier8amount - 20) / 15 + 5;
+}
+
+int32_t getDimboostsForAM(const GameState& st, Decimal amTarget) {
+    int32_t low = 0;
+    int32_t high = 100000000;
+    while (low < high) {
+        int32_t db = (low + high + 1) / 2;
+        const Dimension& dimNeeded = st.AD()[getTierForDimboost(db)];
+        int32_t dimAmountRequied = getAmountForDimboost(db);
+        if (getCostForDimPurchases(dimNeeded.getCostRule(), dimAmountRequied) <= amTarget) {
+            low = db;
+        } else {
+            high = db - 1;
+        }
+    }
+    return low;
+}
+
+int32_t getGalaxiesForAM(const GameState& st, Decimal amTarget) {
+    int32_t low = 0;
+    int32_t high = 1048576;
+    while (low < high) {
+        int32_t ag = (low + high + 1) / 2;
+        const Dimension& dimNeeded = st.AD()[8];
+        int32_t dimAmountRequied = getAmountForGalaxy(ag);
+        if (getCostForDimPurchases(dimNeeded.getCostRule(), dimAmountRequied) <= amTarget) {
+            low = ag;
+        } else {
+            high = ag - 1;
+        }
+    }
+    return low;
 }

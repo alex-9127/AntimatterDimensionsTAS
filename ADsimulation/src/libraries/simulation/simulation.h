@@ -34,6 +34,7 @@ class Iteration {
         Stats stats;
         bool isFinished = false;
         int64_t ticks = 0;
+        int ticksSincePurge = 0;
         int statesBeforePurge = 1;
         int statesAfterPurge = 1;
         int adds = 0;
@@ -53,7 +54,7 @@ class Iteration {
         void appendNewStates();
         void checkProgress();
         void tickAllStates();
-        void purgeObsoleteStates(bool force=false);
+        void purgeObsoleteStates();
 
         // sacrifice window behavior
         virtual SacrificeWindow sacrificeWindow(size_t, size_t) const {
@@ -111,7 +112,6 @@ class ApproxSacrificeIteration : public Iteration {
 
 class SacrificeRefinementIteration : public Iteration {
     private:
-        int purgeTicks = 0;
         void addBranches() override;
 
     public:
@@ -132,8 +132,21 @@ GameInstance runDimboost(GameState st, bool useSacrifice, bool verbose=true);
 GameInstance runGalaxy(GameState st, bool useSacrifice, bool verbose=true,
     std::function<bool(const SimulationHelpers::SegmentSearch&)> earlyStopCondition=
         [](const SimulationHelpers::SegmentSearch&) {return false;});
+GameInstance runInfinity(GameState st, bool useSacrifice, bool verbose=true, Decimal target=DC::INF,
+    std::function<bool(const SimulationHelpers::SegmentSearch&)> earlyStopCondition=
+        [](const SimulationHelpers::SegmentSearch&) {return false;});
 GameInstance runUntil(GameState st, const Progress& progress, bool useSacrifice, bool verbose,
     std::function<bool(const SimulationHelpers::SegmentSearch&)> earlyStopCondition=
         [](const SimulationHelpers::SegmentSearch&) {return false;});
 
-std::map<int32_t, GameInstance> runFullGalaxy(GameState st, bool useSacrifice, bool verbose=true);
+struct SearchResults {
+    using Position = std::pair<int32_t, int32_t>;
+    std::map<Position, GameInstance> routes;
+    int64_t bestTime = INT64_MAX;
+    GameInstance finalSegment;
+};
+
+SearchResults runFullGalaxy(GameState st, bool useSacrifice, bool verbose=true);
+SearchResults runFullInfinity(
+    GameState st, bool useSacrifice, bool verbose=true, Decimal target=DC::INF
+);

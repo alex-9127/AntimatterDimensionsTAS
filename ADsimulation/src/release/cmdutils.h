@@ -11,7 +11,9 @@
 enum RunType {
     NextDimboost,
     NextGalaxy,
-    ForceNextGalaxy
+    ForceNextGalaxy,
+    NextInfinity,
+    ForceNextInfinity
 };
 
 struct InputData {
@@ -37,22 +39,24 @@ struct InputData {
         }
     }
 
-    void saveResult(const std::map<int32_t, GameInstance>& routes) {
+    void saveResult(const SearchResults& results) {
         std::cout << "Finished simulation; dumping result game state into temporary files" << std::endl;
         if (saveCommands) std::cout << "Command sequences will also be saved in temporary files" << std::endl;
-        size_t writtenSegments = 0;
-        bool isFinal;
-        for (const auto& [i, instance] : routes) {
-            isFinal = writtenSegments + 1 == routes.size();
+        for (const auto& [i, instance] : results.routes) {
             std::ofstream save_out = std::ofstream(
-                isFinal ? outputFile : "save_tmp_d" + std::to_string(i) + ".json");
+                "save_tmp_g" + std::to_string(i.first) + "d" + std::to_string(i.second) + ".json");
             save_out << instance.game().to_json();
-            if (saveCommands) {
+            if (saveCommands && !instance.queue().getCompletedInstructions().empty()) {
                 std::ofstream cmd_out = std::ofstream(
-                    isFinal ? cmdOutFile : "cmd_tmp_d" + std::to_string(i - 1) + ".json");
+                    "cmd_tmp_to_g" + std::to_string(i.first) + "d" + std::to_string(i.second) + ".json");
                 writeInstructions(cmd_out, instance.queue());
             }
-            writtenSegments++;
+        }
+        std::ofstream save_out = std::ofstream(outputFile);
+        save_out << results.finalSegment.game().to_json();
+        if (saveCommands) {
+            std::ofstream cmd_out = std::ofstream(cmdOutFile);
+            writeInstructions(cmd_out, results.finalSegment.queue());
         }
     }
 };
@@ -114,19 +118,21 @@ inline InputData getInputFromCmd(int argc, char* argv[]) {
     if (result.gameState.dimensionBoosts() >= 4) {
         std::cout << "2 - Force Antimatter Galaxy" << std::endl;
     }
+    std::cout << "3 - Get next Infinity reset" << std::endl;
+    std::cout << "4 - Force Infinity reset" << std::endl;
     std::string line;
     std::getline(std::cin, line);
     int t;
     try {
         t = line.empty() ? 0 : std::stoi(line);
-    } catch (const std::exception& e) {
+    } catch (const std::exception&) {
         return cancel(result);
     };
-    if (t < 0 || t > 2) return cancel(result);
+    if (t < 0 || t > 4) return cancel(result);
     if (t == 2 && result.gameState.dimensionBoosts() < 4) return cancel(result);
     result.runType = (RunType) t;
-    if (t == 1 || result.gameState.dimensionBoosts() >= 5) {
-        if (t == 1) {
+    if (t == 1 || t == 3 || result.gameState.dimensionBoosts() >= 5) {
+        if (t == 1 || t == 3) {
             std::cout << "This will run segments where sacrifice is unlocked. Do you want to use sacrifice? [Y/n] ";
         } else {
             std::cout << "Input game state has 5 dimension boosts or more. Do you want to use sacrifice? [Y/n] ";

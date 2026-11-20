@@ -28,3 +28,6 @@ int32_t getAmountForDimboost(int32_t dimboostTarget);
 int32_t getAmountForGalaxy(int32_t galaxyTarget);
 
 int32_t getDimboostsForAmount(int32_t tier8amount);
+
+int32_t getDimboostsForAM(const GameState& st, Decimal amTarget);
+int32_t getGalaxiesForAM(const GameState& st, Decimal amTarget);

@@ -107,3 +107,7 @@ string renderProgressBar(double fraction) {
     s +=  " [" + string(completedWidth, '#') + string(50 - completedWidth, ' ') + "]";
     return s;
 }
+
+string horizontalSeparator() {
+    return string(70, '=');
+}

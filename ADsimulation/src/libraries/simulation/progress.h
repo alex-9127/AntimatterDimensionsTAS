@@ -52,6 +52,15 @@ class Progress {
             );
         }
 
+        static Progress untilAntimatter(const Decimal& target) {
+            return Progress(
+                [target](const GameState& st) {return st.maxAntimatterThisInfinity() >= target;}, 
+                [target](const GameState& st) {
+                    return st.maxAntimatterThisInfinity().log10value() / target.log10value();
+                }
+            );
+        }
+
         double getFraction() const {return progressFraction;}
         void finish() {
             progressFraction = 1.0;

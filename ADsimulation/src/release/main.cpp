@@ -25,12 +25,22 @@ int main(int argc, char* argv[]) {
             break;
         }
         case NextGalaxy: {
-            map<int32_t, GameInstance> routes = runFullGalaxy(data.gameState, data.useSacrifice);
-            data.saveResult(routes);
+            SearchResults results = runFullGalaxy(data.gameState, data.useSacrifice);
+            data.saveResult(results);
             break;
         }
         case ForceNextGalaxy: {
             GameInstance instance = runGalaxy(data.gameState, data.useSacrifice);
+            data.saveResult(instance);
+            break;
+        }
+        case NextInfinity: {
+            SearchResults results = runFullInfinity(data.gameState, data.useSacrifice);
+            data.saveResult(results);
+            break;
+        }
+        case ForceNextInfinity: {
+            GameInstance instance = runInfinity(data.gameState, data.useSacrifice);
             data.saveResult(instance);
             break;
         }

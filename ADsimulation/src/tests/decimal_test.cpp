@@ -119,6 +119,17 @@ TEST(DecimalMathematics, BigPower) {
     EXPECT_GT(Decimal::pow(DC::D2, 1024), Decimal(1, (int64_t) 308));
 }
 
+TEST(DecimalMathematics, EvenBiggerPower) {
+    EXPECT_EQ(Decimal::pow(DC::D10, 1000), Decimal(1, (int64_t) 1000));
+    EXPECT_EQ(Decimal::pow(DC::D10, 10000), Decimal(1, (int64_t) 10000));
+    EXPECT_EQ(Decimal::pow(DC::D10, 100000), Decimal(1, (int64_t) 100000));
+    EXPECT_EQ(Decimal::pow(DC::D10, 1000000), Decimal(1, (int64_t) 1000000));
+    EXPECT_EQ(Decimal::pow(DC::D10, 10000000), Decimal(1, (int64_t) 10000000));
+    EXPECT_EQ(Decimal::pow(DC::D10, 100000000), Decimal(1, (int64_t) 100000000));
+    EXPECT_EQ(Decimal::pow(DC::D10, 1000000000), Decimal(1, (int64_t) 1000000000));
+    EXPECT_EQ(Decimal::pow(DC::D10, 1000000000000000), Decimal(1, (int64_t) 1000000000000000));
+}
+
 TEST(DecimalMathematics, BiggerNumberOperations) {
     Decimal a = Decimal(1, (int64_t) 200);
     Decimal b = Decimal(1, (int64_t) 1000);
