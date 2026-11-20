@@ -21,8 +21,5 @@ class ExponentialCostScaling {
             Decimal _baseIncrease, 
             Decimal _costScale,
             Decimal _scalingCostThreshold);
-        Decimal baseCost() const {return Decimal(1, logBaseCost);}
-        Decimal baseIncrease() const {return Decimal(1, logBaseIncrease);}
-        Decimal baseCostScale() const {return Decimal(1, logCostScale);}
         Decimal getCost(int32_t purchases) const;
 };

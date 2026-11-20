@@ -1,7 +1,7 @@
 #pragma once
 #include "gameinstance.h"
 #include "ioutils.h"
-#include <stdexcept>
+#include <exception>
 #include <iostream>
 #include <fstream>
 #include <string>

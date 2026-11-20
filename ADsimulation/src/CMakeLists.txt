@@ -12,7 +12,7 @@ project(J.A.D.E. VERSION 0.0.1
 include(CheckIPOSupported)
 check_ipo_supported(RESULT ipoSupported)
 if(ipoSupported)
-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO ON)
 endif()
 
 if(NOT MSVC)

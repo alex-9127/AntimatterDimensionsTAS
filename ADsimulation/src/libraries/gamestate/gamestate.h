@@ -6,6 +6,7 @@
 #include "sacrifice.h"
 #include "constants.h"
 #include "infinity.h"
+#include "decimal.h"
 #include <cstdint>
 
 
@@ -56,7 +57,6 @@ class GameState : public ISerializable {
         // getters
 
         Decimal antimatter() const {return _antimatter;}
-        Decimal totalAntimatter() const {return _totalAntimatter;}
         Decimal antimatterThisReset() const {return _antimatterThisReset;}
         Decimal maxAntimatterThisInfinity() const {return _maxAntimatterThisInfinity;}
         const AntimatterDimensions& AD() const {return _AD;}

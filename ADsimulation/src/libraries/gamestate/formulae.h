@@ -3,7 +3,6 @@
 #include "decimal.h"
 #include <functional>
 #include <cstdint>
-#include <vector>
 
 
 class GameState;

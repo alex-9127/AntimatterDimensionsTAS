@@ -66,7 +66,7 @@ class AntimatterDimension : public Dimension {
         void from_json(const json& j) override;
 };
 
-class AntimatterDimensions : ISerializable {
+class AntimatterDimensions : public ISerializable {
     private:
         std::array<AntimatterDimension, 8> dims;
 

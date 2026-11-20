@@ -116,7 +116,7 @@ Decimal Achievements::calcBonus() const {
         if (cycle >= 8) {
             cycle = 0;
             if (rowCounter == 8) {
-                fullRows++;;
+                fullRows++;
             }
             rowCounter = 0;
         }

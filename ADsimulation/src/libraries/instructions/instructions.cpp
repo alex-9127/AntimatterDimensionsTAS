@@ -13,9 +13,8 @@ void InstructionQueue::add(const vector<double>& instructions) {
             sacrificeInstructions.push_back(instruction);
             isSacrifice = false;
         } else if (Instruction::isBulkInstruction(instruction)) {
-            int type = instruction / 10;
-            int times = (int) instruction % 10;
-            times = times == 0 ? 10 : times;
+            int type = Instruction::bulkTier(instruction);
+            int times = Instruction::bulkCount(instruction);
             for (int i = 0; i < times; i++) {
                 purchaseInstructions.push_back(type);
             }

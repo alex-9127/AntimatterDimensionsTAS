@@ -33,7 +33,6 @@ struct DC {
     inline static const Decimal D1E5 = Decimal(1, (int64_t) 5LL);
     inline static const Decimal D5E5 = Decimal(5, (int64_t) 5LL);
     inline static const Decimal D1E6 = Decimal(1, (int64_t) 6LL);
-    inline static const Decimal D1E7 = Decimal(1, (int64_t) 7LL);
     inline static const Decimal D1E8 = Decimal(1, (int64_t) 8LL);
     inline static const Decimal D1E9 = Decimal(1, (int64_t) 9LL);
 

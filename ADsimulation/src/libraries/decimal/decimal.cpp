@@ -1,7 +1,7 @@
 #include "decimal.h"
 #include <stdexcept>
 #include <algorithm>
-#include <iostream>
+#include <ostream>
 #include <string>
 #include <format>
 #include <cmath>

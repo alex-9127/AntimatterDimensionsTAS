@@ -4,6 +4,8 @@
 #include "progress.h"
 #include "stats.h"
 #include "timer.h"
+#include <functional>
+#include <cstdint>
 #include <vector>
 #include <map>
 using Strategies = std::vector<std::vector<double>>;

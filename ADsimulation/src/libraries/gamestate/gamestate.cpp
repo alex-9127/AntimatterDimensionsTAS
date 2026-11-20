@@ -134,14 +134,14 @@ Decimal GameState::getAchievementBonus() const {
 
 Decimal GameState::getAntimatterGoalForDimboost() const {
     const Dimension& dimNeeded = this->_AD[getTierForDimboost(_dimensionBoosts + 1)];
-    int32_t dimAmountRequied = getAmountForDimboost(_dimensionBoosts + 1);
-    return getCostForDimPurchases(dimNeeded.getCostRule(), dimAmountRequied);
+    int32_t dimAmountRequired = getAmountForDimboost(_dimensionBoosts + 1);
+    return getCostForDimPurchases(dimNeeded.getCostRule(), dimAmountRequired);
 }
 
 Decimal GameState::getAntimatterGoalForGalaxy() const {
     const Dimension& dimNeeded = this->_AD[8];
-    int32_t dimAmountRequied = getAmountForGalaxy(_antimatterGalaxies + 1);
-    return getCostForDimPurchases(dimNeeded.getCostRule(), dimAmountRequied);
+    int32_t dimAmountRequired = getAmountForGalaxy(_antimatterGalaxies + 1);
+    return getCostForDimPurchases(dimNeeded.getCostRule(), dimAmountRequired);
 }
 
 bool GameState::canBuyNextDimboost() const {
@@ -244,6 +244,7 @@ json GameState::to_json() const {
     j["antimatterGalaxies"] = this->_antimatterGalaxies;
     j["realTimePlayed"] = this->_realTimePlayed;
     j["canUseKonami"] = this->_canUseKonami;
+    j["infinityBroken"] = this->_infinityBroken;
     return j;
 }
 
@@ -261,5 +262,6 @@ void GameState::from_json(const json& j) {
     readIfPresent(j, "antimatterGalaxies", this->_antimatterGalaxies);
     readIfPresent(j, "realTimePlayed", this->_realTimePlayed);
     readIfPresent(j, "canUseKonami", this->_canUseKonami);
+    readIfPresent(j, "infinityBroken", this->_infinityBroken);
     this->prepare();
 }
