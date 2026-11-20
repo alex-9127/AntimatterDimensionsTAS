@@ -71,13 +71,14 @@ void Iteration::tickAllStates() {
     stats.updateTickTime();
 }
 
-void Iteration::purgeObsoleteStates(bool force) {
+void Iteration::purgeObsoleteStates() {
     if ((size_t) nodes.size() > MAX_STATES) {
         throw StateLimitExceeded(format("Iteration stopped: more than {} states", MAX_STATES));
     }
-    if (force || adds >= 300 || states >= statesAfterPurge * 1.5) {
+    if (adds >= 300 || states >= statesAfterPurge * 1.5 || ticksSincePurge >= 1000) {
         stats.resetPurgeTimer();
         adds = 0;
+        ticksSincePurge = 0;
         statesBeforePurge = nodes.size();
         maxStates = max(maxStates, statesBeforePurge);
         purge(nodes, [this](int purged, double progressFraction) {
@@ -178,6 +179,7 @@ vector<SearchNode> Iteration::run() {
         tickAllStates();
         purgeObsoleteStates();
         ticks++;
+        ticksSincePurge++;
         if (ticks >= MAX_TICKS) {
             renderProgressDisplay();
             throw TickLimitExceeded(format("Strategy search stopped: took more than {} ticks", MAX_TICKS));
@@ -324,11 +326,6 @@ SacrificeRefinementIteration::SacrificeRefinementIteration(
 void SacrificeRefinementIteration::addBranches() {
     addSacrificeWindowBranches();
     appendNewStates();
-    purgeTicks++;
-    if (purgeTicks >= 1000) {
-        purgeObsoleteStates(true);
-        purgeTicks = 0;
-    }
 }
 
 namespace SimulationHelpers {
@@ -521,7 +518,7 @@ GameInstance runDimboost(
     GameState st, bool useSacrifice, bool verbose
 ) {
     GameInstance result;
-    if (st.antimatterGalaxies() == 1 && st.dimensionBoosts() == 9) {
+    if (!st.achievements().isUnlocked(23) && st.antimatterGalaxies() == 1 && st.dimensionBoosts() == 9) {
         result = runUntil(
             st, Progress::untilAch23(), useSacrifice, verbose
         );
@@ -662,7 +659,10 @@ SearchResults runFullInfinity(
             throw SearchError(e.what());
         }
     }
+    int64_t galaxyTime = INT64_MAX;
     for (int32_t g = maxGalaxies; g >= startGalaxies; g--) {
+        cout << "============================================================" << endl;
+        cout << "Running as many dimboosts as possible for galaxy " << g << endl;
         int32_t latestDimboost = -1;
         for (auto [pos, route] : results.routes) {
             if (pos.first == g) {
@@ -688,7 +688,12 @@ SearchResults runFullInfinity(
                 cout << e.what() << ", further dimboosts for this galaxy unavailable" << endl;
                 break;
             }
+            if (start.game().realTimePlayed() > galaxyTime) {
+                cout << "Route suboptimal, further dimboosts for this galaxy will be skipped" << endl;
+                break;
+            }
         }
+        galaxyTime = min(galaxyTime, start.game().realTimePlayed());
     }
     pair<int32_t, int32_t> optimalPos = {0, 0};
     for (currGalaxy = maxGalaxies; currGalaxy >= startGalaxies; currGalaxy--) {

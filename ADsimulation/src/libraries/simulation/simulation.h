@@ -34,6 +34,7 @@ class Iteration {
         Stats stats;
         bool isFinished = false;
         int64_t ticks = 0;
+        int ticksSincePurge = 0;
         int statesBeforePurge = 1;
         int statesAfterPurge = 1;
         int adds = 0;
@@ -53,7 +54,7 @@ class Iteration {
         void appendNewStates();
         void checkProgress();
         void tickAllStates();
-        void purgeObsoleteStates(bool force=false);
+        void purgeObsoleteStates();
 
         // sacrifice window behavior
         virtual SacrificeWindow sacrificeWindow(size_t, size_t) const {
@@ -111,7 +112,6 @@ class ApproxSacrificeIteration : public Iteration {
 
 class SacrificeRefinementIteration : public Iteration {
     private:
-        int purgeTicks = 0;
         void addBranches() override;
 
     public:
