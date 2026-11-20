@@ -22,3 +22,4 @@ std::string renderTimeVerbose(long ms);
 bool needsHelp(int argc, char* argv[]);
 std::map<std::string, std::string> parseArgs(int argc, char* argv[]);
 std::string renderProgressBar(double fraction);
+std::string horizontalSeparator();

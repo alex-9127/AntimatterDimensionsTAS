@@ -397,7 +397,7 @@ namespace SimulationHelpers {
 
     void startIteration(SegmentSearch& search) {
         search.iterationCounter++;
-        cout << "============================================================" << endl;
+        cout << horizontalSeparator() << endl;
         cout << "Running iteration " << search.iterationCounter << endl;
     }
 
@@ -411,7 +411,7 @@ namespace SimulationHelpers {
     void refineSacrifices(
         const SegmentSearch& search, vector<SearchNode>& resultNodes, RouteStrategies& strategies
     ) {
-        cout << "============================================================" << endl;
+        cout << horizontalSeparator() << endl;
         cout << "Refining sacrifices" << endl;
         resultNodes = SacrificeRefinementIteration(
             search.st, search.progress, strategies.purchases, strategies.sacrifices, search.verbose).run();
@@ -585,7 +585,7 @@ SearchResults runFullGalaxy(GameState st, bool useSacrifice, bool verbose) {
     int32_t currDimboost = startDimboosts;
     while (start.game().dimensionBoosts() < maxDimboosts) {
         currDimboost++;
-        cout << "============================================================" << endl;
+        cout << horizontalSeparator() << endl;
         cout << "Running dimension boost " << currDimboost << endl;
         try {
             start = runDimboost(start.game(), useSacrifice, verbose);
@@ -596,7 +596,7 @@ SearchResults runFullGalaxy(GameState st, bool useSacrifice, bool verbose) {
     }
     int32_t optimalDimboost = maxDimboosts;
     for (currDimboost = maxDimboosts; currDimboost >= max(4, startDimboosts); currDimboost--) {
-        cout << "============================================================" << endl;
+        cout << horizontalSeparator() << endl;
         cout << "Attempting to get galaxy from dimension boost " << currDimboost << endl;
         try {
             int64_t finalSegmentTime = results.bestTime - results.routes[{g, currDimboost}].game().realTimePlayed();
@@ -610,7 +610,7 @@ SearchResults runFullGalaxy(GameState st, bool useSacrifice, bool verbose) {
                     );
                 }
             );
-            cout << "============================================================" << endl;
+            cout << horizontalSeparator() << endl;
             cout << "Final time: " << renderTime(segment.game().realTimePlayed()) << endl;
             if (segment.game().realTimePlayed() < results.bestTime) {
                 results.bestTime = segment.game().realTimePlayed();
@@ -623,7 +623,7 @@ SearchResults runFullGalaxy(GameState st, bool useSacrifice, bool verbose) {
             cout << e.what() << ", skipped" << endl;
         }
     }
-    cout << "============================================================" << endl;
+    cout << horizontalSeparator() << endl;
     cout << "Final time for this galaxy: " << renderTime(results.finalSegment.game().realTimePlayed()) << endl;
     cout << "(reached from dimboost " << optimalDimboost << ")" << endl; 
     return results;
@@ -643,7 +643,7 @@ SearchResults runFullInfinity(
     int32_t currDimboost;
     while (start.game().antimatterGalaxies() < maxGalaxies) {
         currGalaxy++;
-        cout << "============================================================" << endl;
+        cout << horizontalSeparator() << endl;
         cout << "Running galaxy " << currGalaxy << endl;
         try {
             SearchResults subRoutes = runFullGalaxy(start.game(), useSacrifice, verbose);
@@ -661,7 +661,7 @@ SearchResults runFullInfinity(
     }
     int64_t galaxyTime = INT64_MAX;
     for (int32_t g = maxGalaxies; g >= startGalaxies; g--) {
-        cout << "============================================================" << endl;
+        cout << horizontalSeparator() << endl;
         cout << "Running as many dimboosts as possible for galaxy " << g << endl;
         int32_t latestDimboost = -1;
         for (auto [pos, route] : results.routes) {
@@ -676,16 +676,18 @@ SearchResults runFullInfinity(
         currDimboost = latestDimboost;
         while (start.game().dimensionBoosts() < maxDimboosts) {
             currDimboost++;
-            cout << "============================================================" << endl;
+            cout << horizontalSeparator() << endl;
             cout << "Running dimboost " << currDimboost << endl;
             try {
                 start = runDimboost(start.game(), useSacrifice, verbose);
                 results.routes[{g, start.game().dimensionBoosts()}] = start;
             } catch (const TickLimitExceeded& e) {
-                cout << e.what() << ", further dimboosts for this galaxy unavailable" << endl;
+                cout << e.what() << endl;
+                cout << "Further dimboosts for this galaxy unavailable" << endl;
                 break;
             } catch (const StateLimitExceeded& e) {
-                cout << e.what() << ", further dimboosts for this galaxy unavailable" << endl;
+                cout << e.what() << endl;
+                cout << "Further dimboosts for this galaxy unavailable" << endl;
                 break;
             }
             if (start.game().realTimePlayed() > galaxyTime) {
@@ -700,7 +702,7 @@ SearchResults runFullInfinity(
         for (currDimboost = maxDimboosts; currDimboost >= 0; currDimboost--) {
             auto it = results.routes.find({currGalaxy, currDimboost});
             if (it == results.routes.end()) continue;
-            cout << "============================================================" << endl;
+            cout << horizontalSeparator() << endl;
             cout << "Attempting to get infinity from g" << currGalaxy << "d" << currDimboost << endl;
             try {
                 GameState gst = it->second.game();
@@ -715,7 +717,7 @@ SearchResults runFullInfinity(
                         );
                     }
                 );
-                cout << "============================================================" << endl;
+                cout << horizontalSeparator() << endl;
                 cout << "Final time: " << renderTime(segment.game().realTimePlayed()) << endl;
                 if (segment.game().realTimePlayed() < results.bestTime) {
                     results.bestTime = segment.game().realTimePlayed();
@@ -729,7 +731,7 @@ SearchResults runFullInfinity(
             }
         }
     }
-    cout << "============================================================" << endl;
+    cout << horizontalSeparator() << endl;
     cout << "Final time for this infinity: " << renderTime(results.finalSegment.game().realTimePlayed()) << endl;
     cout << "(reached from galaxy " << optimalPos.first << " and dimboost " << optimalPos.second << ")" << endl;
     return results;
