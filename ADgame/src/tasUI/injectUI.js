@@ -87,6 +87,12 @@ style.textContent = `
         user-select: text;
     }
 
+    div {
+        transition: 
+            background-color 0.2s ease,
+            color 0.2s ease;
+
+    }
     #root > *:not(#footer) {
         margin: 5px;
     }
