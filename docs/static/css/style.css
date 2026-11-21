@@ -1,0 +1,28 @@
+body {
+    background-color: #202020;
+    font-family: monospace;
+    font-size: 10pt;
+    color: white;
+    padding: 0px;
+}
+
+h1 {
+    text-align: center;
+}
+
+a {
+    color: #009f00;
+}
+
+.content {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.faq {
+    background-color: #404040;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+    padding-left: 5%;
+    padding-right: 5%;
+}

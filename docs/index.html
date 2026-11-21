@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./static/css/style.css">
+        <title>Jade's and Alex9127's Antimatter Dimensions Estimator</title>
+    </head>
+    <body>
+        <div class="content">
+            <h1>
+                Jade's and Alex9127's Antimatter Dimensions Estimator
+            </h1>
+            <p>
+                Choose a strategy segment to view, or click <a href="#">here</a> to learn more about this page.
+            </p>
+            <p>
+                Under construction...
+            </p>
+        </div>
+        <div class="content faq">
+            <h3>
+                Okay, what is this about?
+            </h3>
+            <p>
+                This is a tool created by me (@alex9127) with the moral support of Jade (@jadeisp). It allows one to optimize beginning parts 
+                of the incremental game <a href="https://ivark.github.io/AntimatterDimensions">Antimatter Dimensions</a>.
+            </p>
+            <p>
+                For now this contains the optimal strategy for the very first infinity of the game, which gets a final time of 07:04:50.817.
+                This works for web/steam versions of the game on Speedrun mode with update rate of 33ms; mobile version is not supported.
+            </p>
+            <h3>
+                Why?
+            </h3>
+            <p>
+                I really like all the deep math that hides in the code of this game and have always wanted to research it and find an optimal strategy for the parts of it. 
+                Whether you don't know anything about the game or already know all the tricks, I hope you like what you are seeing.
+            </p>
+            <h3>
+                How?
+            </h3>
+            <p>
+                Short answer: I rewrote all the game calculations that are relevant for what I am trying to do, on C++, and then attached a framework 
+                to allow for running multiple thousands of game states at the same time and automatically searching for the most optimal strategy and 
+                discarding everything else.
+            </p>
+            <p>
+                More thorough explanation can be found <a href="#">here</a>.
+            </p>
+            <h3>
+                Can I see the code?
+            </h3>
+            <p>
+                Why, yes! Just refer to the <a href="https://github.com/alex9127git/AntimatterDimensionsTAS">GitHub repository</a> - 
+                it has a slightly modified version of this game to allow for running my instructions, as well as the search tool itself.
+            </p>
+            <h3>
+                Can I run it?
+            </h3>
+            <p>
+                If you are willing to do some preparation, yes! You would want to install a C++ compiler that supports C++20 and CMake with a minimum version of 3.23.
+                Just clone the repository and build the ./ADsimulation/src/ folder - it will automatically run some tests to ensure the program works correctly 
+                and then allow you to run it.
+            </p>
+            <p>
+                The program can also be run in any thing that resembles a terminal, so you don't need anything special. 
+                Beware though - the search is quite intensive, and can take up to half of your CPU power and up to 10 gigabytes of RAM.
+            </p>
+            <p>
+                More verbose instructions for running this can be found in the 
+                <a href="https://github.com/alex9127git/AntimatterDimensionsTAS">GitHub repository</a>.
+            </p>
+        </div>
+    </body>
+</html>
