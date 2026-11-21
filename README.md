@@ -30,7 +30,7 @@ after you've made changes - just reload the page. The server **can**
 occasionally crash, so check your terminal from time to time and run `serve`
 again if needed.
 
-## Run the simulation
+## Run simulation
 
 You will need a C++ compiler (preferably g++) that supports **C++20**, as well as **CMake** with a version of at least **3.23**.
 
