@@ -1,7 +1,7 @@
 body {
     background-color: #202020;
     font-family: monospace;
-    font-size: 10pt;
+    font-size: 11pt;
     color: white;
     padding: 0px;
 }
@@ -19,7 +19,7 @@ a {
     margin-right: 10%;
 }
 
-.faq {
+.inner-block {
     background-color: #404040;
     padding-top: 0.5rem;
     padding-bottom: 1rem;

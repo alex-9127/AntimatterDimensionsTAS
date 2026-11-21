@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./static/css/style.css">
+        <title>Jade's and Alex9127's Antimatter Dimensions Estimator</title>
+    </head>
+    <body>
+        <div class="content">
+            <h1>
+                Jade's and Alex9127's Antimatter Dimensions Estimator
+            </h1>
+            <p>
+                So, you've clicked here - which means you are curious to learn more about this project of mine. Well, let's see what I can do.
+            </p>
+            <h3>
+                Inspiration
+            </h3>
+            <p>
+                I was heavily inspired by menelajjj's similar <a href="https://menelajjj.github.io/ad-dimboost-optimizer">tool</a> 
+                that already did list optimal strategies for first infinity. However, I wanted to go further, to iterate on it and improve it.
+            </p>
+            <p>
+                The tool menelajjj created was written mainly in Python, with a custom C++ library for clearing suboptimal game states 
+                (as it was quite a heavy task requiring substantial computing power). However, doing it this way required a lot of complex interaction
+                between Python and C++, and Python isn't exactly known for being fast. An obvious solution was to rewrite the entire thing in C++.
+                Equipped with menelajjj's permission, I decided to rewrite the entire thing in his stead.
+            </p>
+            <h3>
+                Basic Infrastructure
+            </h3>
+            <p>
+                The program consists of several layers closely intertwined with each other that allow simulating multitude of game states and strategies as fast as possible:
+            </p>
+            <ul>
+                <li>game state layer contains all the math required to accurately simulate AD behavior;</li>
+                <li>some wrapper layers to append instruction rerunning functionality;</li>
+                <li>a lot of functions allowing, with some waiting, to get an optimal strategy.</li>
+            </ul>
+            <p>
+                Initially, the search was being implemented in the same way as in menelajjj's tool - that is, by alternating between purchase optimization and sacrifice optimization.
+                Running both at the same time isn't exactly possible, unless the humanity will create a powerful enough super computer (and perhaps not even then), so this was a
+                necessary compromise. Unfortunately, the search wasn't fast - it took multiple hours for some dimension boosts, and the precision was quite limited,
+                so the search structure had to be rewritten.
+            </p>
+            <h3>
+                Purchase Optimization
+            </h3>
+            <p>
+                This part actually behaves pretty much the same as menelajjj's implementation. Some heuristics were ascertained originally that I decided to not change:
+            </p>
+            <ul>
+                <li>everything that is 1000 times cheaper (or more) is bought automatically - to reduce the possibilities to a reasonable number;</li>
+                <li>if a dimension has an amount of purchases that isn't divisible by 10, attempt to get the remaining purchases to get the next buy 10 bonus.</li>
+            </ul>
+            <p>
+                There were also heuristics pertaining to possible purchases the game state can take. These would depend on the so-called "frontier" - last dimension that you are able to purchase.
+                From the other things, the simulation would choose a minimum price, and compare the frontier dimension price with the minimum found.
+            </p>
+            <ul>
+                <li>If a frontier dimension is cheap enough, only the frontier is being considered.</li>
+                <li>If a frontier dimension price is close enough to other small prices, it is being considered for purchase along with the cheapest possible purchases.</li>
+                <li>If a frontier dimension is way too expensive, it isn't considered for purchase.</li>
+            </ul>
+            <p>
+                All these heuristics were checked by menelajjj against the full search on first three dimension boosts, which included permutations of every single 
+                possible purchase in the same price range. The strategies found by both searches achieve the same result. It is however not possible to check further: 
+                doing so would require a lot of computational resources that aren't normally available. As such, it isn't guaranteed that the strategies found are optimal; 
+                however, they are bound to be pretty close.
+            </p>
+            <h3>
+                Sacrifice Optimization
+            </h3>
+            <p>
+                Initial menelajjj's implementation consisted of sacrificing at different steps, to find a good enough sacrifice. The search would branch, when sacrifice is available,
+                creating a game state that would sacrifice at a certain step later. Resulting logic would simulate up to x25 multipliers at once, with step of 0.001.
+            </p>
+            <p>
+                This however, wasn't entirely optimal - it was additive rather than multiplicative. This would go on to simulate way too much sacrifice states that wouldn't be different from each other,
+                while also significantly slowing the strategy search down.
+            </p>
+            <p>
+                I moved to a better system, that would apply the x1.001 step multiplicatively rather than additively (so that it stays relevant no matter what sacrifice multiplier you have),
+                which slightly cut down the time. That however, would still not solve the problem - it was known that increasing the precision further than 0.001 produced better results,
+                but it was already too slow to run the search with a step of 0.001.
+            </p>
+            <p>
+                Thus, another improvement was implemented: after an iteration that would find approximate places to sacrifice at, they would be further refined to locate the exact tick that produces
+                the most optimal strategy. This allowed me to save single ticks over menelajjj's implementation, while also being faster due to being written on C++ and utilizing multithreading to
+                speed up slower parts of the code (which is going to be most of the simulation, actually).
+            </p>
+            <h3>
+                Iteration Logic and Purging Suboptimality
+            </h3>
+            <p>
+                The iterations itself need to have a stable way to weed out game states that are really bad and will not likely produce an optimal strategy. Every once in a while, a so-called
+                "purge" is run, that compares every game state against each other, and deletes game states that are worse in every measurable way, as well as duplicates.
+            </p>
+            <p>
+                Implementing this part of the code correctly is very important - it has quite big time complexity (about O(n^2 * k), where n is states amount and k is amount of compared numbers
+                on a given game state), so care must be exercised to make sure it isn't called in vain and that it is effective at doing what it's supposed to do. Having purge be optimal enough also
+                allows to search more thoroughly in hopes of finding a better strategy - so finding a way to purge more in the same time frame is always welcome.
+            </p>
+            <p>
+                menelajjj's implementation sorted all game states by decreasing amount of 1st AD amount, then comparing each pair to see if a save has all of the numbers bigger than the other save;
+                if yes, the worse save was deleted. This core remained across implementations, as modifying it significantly would risk either removing too much game states and missing the optimal
+                strategy, or removing too little and slowing simulation down to a halt.
+            </p>
+            <p>
+                However, some things were implemented to allow purge to skip some routine comparisons and improve the remaining work:
+            </p>
+            <ul>
+                <li>
+                    If the save amount is large enough, the remaining saves are grouped by purchase amount, and purchase amount is prioritized before comparing everything else. Thus, an entire group
+                    can dominate over the other group, allowing a lot of saves to be instantly purged if they are really bad. This can optimally reduce the purging check to a flat constant and
+                    slightly speed up purge in some situations with several purchase groups.
+                </li>
+                <li>
+                    The purge was really reluctant to delete saves with close enough sacrifices - a save could be really bad, while having better sacrifice amount, and it would be left alone, even though
+                    it is unlikely for it to win. A precision system was implemented for sacrifice comparison that allowed it to check the sacrifices only up to some precision, deeming the values equal
+                    past a certain point. This allowed the purge code to delete save states in more situations, while not harming the optimal strategy search.
+                </li>
+            </ul>
+            <p>
+                As I said earlier, sometimes improving purge allows to utilize a better strategy. That's what I ended up doing, after getting these two improvements in.
+            </p>
+            <h3>
+                Polishing Sacrifices
+            </h3>
+            <p>
+                This is an all-new phase that isn't derived from any of menelajjj's work. The approach before was to cycle between optimizing purchases and sacrifices, never optimizing both at the same
+                time. However, it is possible to optimize one of the sacrifices at the same time as purchases, although it does take a bit longer to run.
+            </p>
+            <p>
+                This phase of the search starts after both a purchase and a sacrifice iteration by themselves didn't improve time any further. After that, for each sacrifice, starting from the last one,
+                a special purchase iteration is done, that allows the simulation to optimize purchases, as well as a given sacrifice, at the same time. This allows the simulation to get unstuck
+                from potential local optimums, and save several seconds across different segments.
+            </p>
+            <p>
+                After each of the purchase iterations a sacrifice refinement iteration is called to slightly shuffle the sacrifices around. The search stops when a number of iterations equal to a 
+                number of sacrifices done has passed without improving best segment time.
+            </p>
+            <h3>
+                Iteration Integration
+            </h3>
+            <p>
+                All these iterations are done one after the other to approach the best time as quickly and accurately as possible:
+            </p>
+            <ul>
+                <li>purchase iteration, then sacrifice iteration followed by sacrifice refinement, done until a full cycle doesn't improve best time</li>
+                <li>sacrifice polish iteration, followed by sacrifice refinement, done until a certain amount of polish iterations don't improve best time</li>
+            </ul>
+            <p>
+                Unfortunately, even all of this doesn't fully guarantee an optimal time, but it does come pretty close, and there don't seem to be ways to improve it without getting more powerful
+                computers or compromising on some of the optimal timing. This does make it a pretty good result (in my opinion).
+            </p>
+        </div>
+    </body>
+</html>
