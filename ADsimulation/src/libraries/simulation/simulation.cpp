@@ -647,7 +647,8 @@ SearchResults runFullInfinity(
         cout << "Running galaxy " << currGalaxy << endl;
         try {
             SearchResults subRoutes = runFullGalaxy(start.game(), useSacrifice, verbose);
-            for (auto [pos, route] : subRoutes.routes) {
+            for (const auto& [pos, route] : subRoutes.routes) {
+                if (results.routes.contains(pos)) continue;
                 results.routes[pos] = route;
             }
             start = subRoutes.finalSegment;
@@ -664,7 +665,7 @@ SearchResults runFullInfinity(
         cout << horizontalSeparator() << endl;
         cout << "Running as many dimboosts as possible for galaxy " << g << endl;
         int32_t latestDimboost = -1;
-        for (auto [pos, route] : results.routes) {
+        for (const auto& [pos, route] : results.routes) {
             if (pos.first == g) {
                 latestDimboost = pos.second;
                 start = route;
