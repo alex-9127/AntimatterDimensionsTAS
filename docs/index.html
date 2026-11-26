@@ -12,13 +12,20 @@
         </header>
         <div class="content">
             <p>
-                Choose a strategy segment to view, or click <a href="#">here</a> to learn more about this page.
+                Choose a strategy segment to view, or click <a href="#aboutDiv">here</a> to learn more about this page.
             </p>
             <p>
-                Under construction...
+                Galaxies at segment start: 
+                <input id="galaxiesSpinbox" type="number" min="0" max="2" value="0"><br>
+                Dimboosts at segment start: 
+                <input id="dimboostsSpinbox" type="number" min="0" max="8" value="0"><br>
             </p>
+            <h3>
+                Instruction table for this segment
+            </h3>
+            <table id="instructionTable" class="instruction-table"></table>
         </div>
-        <div class="content inner-block">
+        <div id="aboutDiv" class="content inner-block">
             <h3>
                 Okay, what is this about?
             </h3>
@@ -86,5 +93,6 @@
                 If you wish to (not) be credited, contact me at Discord (@alex9127).
             </p>
         </div>
+        <script src="static/js/index.js"></script>
     </body>
 </html>

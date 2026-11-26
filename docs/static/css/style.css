@@ -2,6 +2,8 @@
     --bg-color: #202020;
     --inner-color: #404040;
     --accent-color: #1bbb36;
+    --antimatter-color-bg: #df50505f;
+    scroll-behavior: smooth;
 }
 
 body {
@@ -11,7 +13,10 @@ body {
     color: white;
     padding: 0px;
     margin-top: 0px;
-    
+}
+
+#aboutDiv {
+    scroll-margin-top: 5.5rem;
 }
 
 header {
@@ -46,4 +51,36 @@ a {
 .hide-link {
 	color: inherit;
 	text-decoration: none;
+}
+
+.instruction-table {
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.instruction-table td {
+    border: none;
+    padding: 0.25rem;
+}
+
+.instruction-table tr:nth-child(2n) {
+    background-color: var(--antimatter-color-bg);
+}
+
+.hint {
+    text-decoration: underline dotted;
+    cursor: help;
+    position: relative;
+}
+
+.hint:hover::after {
+    content: attr(data-tooltip);   /* берёт текст из атрибута */
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: var(--inner-color);
+    border: 1px solid var(--accent-color);
+    padding: 0.3rem 0.5rem;
+    z-index: 10;
 }
