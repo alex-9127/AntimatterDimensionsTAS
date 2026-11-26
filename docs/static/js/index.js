@@ -46,8 +46,9 @@ async function loadInstructions() {
     const g = Number(galaxiesSpinbox.value);
     const d = Number(dimboostsSpinbox.value);
 
+    var response;
     try {
-        const response = await fetch(`./data/g${g}d${d}.json`);
+        response = await fetch(`./data/g${g}d${d}.json`);
 
         instructionTable.previousElementSibling.hidden = false;
         instructionTable.hidden = false;
