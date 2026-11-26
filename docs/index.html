@@ -12,14 +12,14 @@
         </header>
         <div class="content">
             <p>
-                Choose a strategy segment to view, or click <a href="#aboutDiv">here</a> to learn more about this page.
+                Choose a segment to view, or click <a href="#aboutDiv">here</a> to learn more about this page.
             </p>
-            <p>
+            <br>
+            <p class="center">
                 Galaxies at segment start : 
                 <input id="galaxiesSpinbox" style="max-width: 3rem" type="number" min="0" max="2" value="0"> <br>
                 Dimboosts at segment start: 
                 <input id="dimboostsSpinbox" style="max-width: 3rem" type="number" min="0" max="8" value="0"> 
-                <br>
                 <br>
             </p>  
             <h3>
@@ -27,16 +27,20 @@
             </h3>
             <table id="instructionTable" class="instruction-table"></table>
         </div>
+
+        <!-- add a visual divider between "pages" -->
+        <div data-divider="true"></div>
+
         <div id="aboutDiv" class="content inner-block">
             <h3>
                 Okay, what is this about?
             </h3>
             <p>
-                This is a tool created by me (@alex9127) with the moral support of Jade (@jadeisp). It allows one to optimize beginning parts 
+                This is a tool created by me (@alex9127) with the moral support of Jade (@jadeisp). It allows you to optimize beginning parts 
                 of the incremental game <a href="https://ivark.github.io/AntimatterDimensions">Antimatter Dimensions</a>.
             </p>
             <p>
-                For now this contains the optimal strategy for the very first infinity of the game, which gets a final time of 07:04:50.817.
+                For now this contains the optimal strategy for the very first infinity of the game (achieving a final time of 07:04:50.817).
                 This works for web/steam versions of the game on Speedrun mode with update rate of 33ms; mobile version is not supported.
             </p>
             <h3>
@@ -87,8 +91,10 @@
                 I would like to credit the following people (with Discord usernames listed):
             </p>
             <ul>
-                <li>Jade (@jadeisp) - creating a framework to run instructions from my simulation on a real game with as little modifications as reasonably possible;</li>
-                <li>@menelajjj - creating the initial <a href="https://menelajjj.github.io/ad-dimboost-optimizer">tool</a> for this job
+                <li>Jade (@jadeisp) - creating a TAS framework to run a set of instructions in Antimatter Dimensions directly, with as little modifications to the base game as reasonably possible;</li>
+                <!-- add a break between each list item for clarity -->
+                <br>
+                <li>@menelajjj - creating the initial <a href="https://menelajjj.github.io/ad-dimboost-optimizer">tool</a> for this job,
                 and laying down a lot of groundwork that I could later work from.</li>
             </ul>
             <p>

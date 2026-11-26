@@ -8,6 +8,8 @@
     --text-color: #FFFFFF;
 
     scroll-behavior: smooth;
+    /* enforce scroll behavior */
+    overflow-y: scroll;
 }
 
 body {
@@ -29,8 +31,6 @@ body {
 #aboutDiv {
     scroll-margin-top: 5.5rem;
     margin-bottom: 5.5rem;
-
-    max-width: calc(45vw);
 }
 
 /*    hide content on bottom, to visual space   */
@@ -43,7 +43,7 @@ body::after {
     left: 0;
 
     width: 100%;
-    height: 2rem;
+    height: 1rem;
 
     background-color: var(--bg-color);
     z-index: 9999999999;
@@ -57,6 +57,9 @@ header {
 
     background-color: var(--bg-color);
     border-bottom: var(--accent-color) 3px solid;
+
+    /* fix a bug where elements show above it */
+    z-index: 999999999;
 }
 
 h1 {
@@ -65,14 +68,31 @@ h1 {
 }
 
 a {
+    &:focus {
+        /* prevent outline when focusing on it */
+        outline: none;
+    }
     color: var(--accent-color);
 }
 
-.content {
-    margin-left: 10%;
-    margin-right: 10%;
+.center {
+    justify-self: center;
+    transform: translateX(-50%);
 }
 
+.content {
+    margin-bottom: 10%;
+    margin-top: 10%;
+
+    max-width: 45vw;
+    width: 100%;
+}
+
+[data-divider] {
+    background-color: white;
+    width: 100%;
+    height: 1px;
+}
 .inner-block {
     background-color: var(--inner-color);
     padding: 1rem 5% 1.5rem 5%;
@@ -94,7 +114,7 @@ a {
     padding: 0.25rem;
 }
 
-.instruction-table tr:nth-child(2n) {
+.instruction-table tr:nth-child(even) {
     background-color: var(--antimatter-color-bg);
 }
 
@@ -105,7 +125,7 @@ a {
 }
 
 .hint:hover::after {
-    content: attr(data-tooltip);   /* берёт текст из атрибута */
+    content: attr(data-tooltip);
 
     position: absolute;
     left: 0;
