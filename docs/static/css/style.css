@@ -1,34 +1,67 @@
 :root {
-    --bg-color: #202020;
+    /* soften the black even more */
+    --bg-color: #242424;
     --inner-color: #404040;
     --accent-color: #1bbb36;
+    --accent-color-alt: #df5050;
     --antimatter-color-bg: #df50505f;
+    --text-color: #FFFFFF;
+
     scroll-behavior: smooth;
 }
 
 body {
-    background-color: var(--bg-color);
+    display: flex;
+
+    align-items: center;
+    flex-direction: column;
+
+    padding: 0xp 5px 5px 5px;
+    margin-top: 0px;
+
     font-family: monospace;
     font-size: 11pt;
-    color: white;
-    padding: 0px;
-    margin-top: 0px;
+
+    color: var(--text-color);
+    background-color: var(--bg-color);
 }
 
 #aboutDiv {
     scroll-margin-top: 5.5rem;
+    margin-bottom: 5.5rem;
+
+    max-width: calc(45vw);
+}
+
+/*    hide content on bottom, to visual space   */
+body::after {
+    /* all fields are required */
+    content: "";
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 2rem;
+
+    background-color: var(--bg-color);
+    z-index: 9999999999;
 }
 
 header {
     position: sticky;
     top: 0;
+
+    width: 100%;
+
     background-color: var(--bg-color);
-    border-top: var(--bg-color) 3px solid;
     border-bottom: var(--accent-color) 3px solid;
 }
 
 h1 {
     text-align: center;
+    color: var(--text-color);
 }
 
 a {
@@ -42,10 +75,7 @@ a {
 
 .inner-block {
     background-color: var(--inner-color);
-    padding-top: 0.5rem;
-    padding-bottom: 1rem;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding: 1rem 5% 1.5rem 5%;
 }
 
 .hide-link {
@@ -76,11 +106,15 @@ a {
 
 .hint:hover::after {
     content: attr(data-tooltip);   /* берёт текст из атрибута */
+
     position: absolute;
     left: 0;
     top: 100%;
+
     background-color: var(--inner-color);
     border: 1px solid var(--accent-color);
+
     padding: 0.3rem 0.5rem;
+
     z-index: 10;
 }

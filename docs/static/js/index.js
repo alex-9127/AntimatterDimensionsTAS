@@ -45,9 +45,23 @@ function clampSpinboxes() {
 async function loadInstructions() {
     const g = Number(galaxiesSpinbox.value);
     const d = Number(dimboostsSpinbox.value);
-    const response = await fetch(`./data/g${g}d${d}.json`)
+
+    try {
+        const response = await fetch(`./data/g${g}d${d}.json`);
+
+        instructionTable.previousElementSibling.hidden = false;
+        instructionTable.hidden = false;
+    } catch(e) {
+
+        instructionTable.previousElementSibling.hidden = true;
+        instructionTable.hidden = true;
+
+        throw new Error(e);
+    }
     instructionTable.replaceChildren();
-    if (!response.ok) return;
+    if (!response.ok) {
+        return;
+    }
     const instructions = await response.json();
     var maxArgs = 0;
     for (const [_i, [_name, args]] of instructions.entries()) {
