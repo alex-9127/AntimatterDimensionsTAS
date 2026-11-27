@@ -2,12 +2,12 @@
 <html>
     <head>
         <link rel="stylesheet" href="./static/css/style.css">
-        <title>Jade's and Alex9127's Antimatter Dimensions Estimator</title>
+        <title>Jade and Alex9127's Antimatter Dimension Estimator</title>
     </head>
     <body>
         <header>
             <h1><a class="hide-link" href="./index.html">
-                Jade's and Alex9127's Antimatter Dimensions Estimator
+                Jade and Alex9127's Antimatter Dimension Estimator
             </a></h1>
         </header>
         <div class="content">
@@ -15,17 +15,20 @@
                 Choose a segment to view, or click <a href="#aboutDiv">here</a> to learn more about this page.
             </p>
             <br>
-            <p class="center">
-                Galaxies at segment start : 
-                <input id="galaxiesSpinbox" style="max-width: 3rem" type="number" min="0" max="2" value="0"> <br>
-                Dimboosts at segment start: 
-                <input id="dimboostsSpinbox" style="max-width: 3rem" type="number" min="0" max="8" value="0"> 
-                <br>
-            </p>  
-            <h3>
-                Instruction table for this segment
-            </h3>
+            <br>
+            <div> 
+                <div class="flex-align-horz">
+                    <span>
+                        Galaxies at segment start : 
+                        <input id="galaxiesSpinbox" style="max-width: 3rem" type="number" min="0" max="2" value="0">
+                    </span>
+                    <span>
+                        Dimboosts at segment start: 
+                        <input id="dimboostsSpinbox" style="max-width: 3rem" type="number" min="0" max="8" value="0"> 
+                    </span>
+                </div>  
             <table id="instructionTable" class="instruction-table"></table>
+            </div>
         </div>
 
         <!-- add a visual divider between "pages" -->

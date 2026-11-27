@@ -1,6 +1,6 @@
 :root {
     /* soften the black even more */
-    --bg-color: #242424;
+    --bg-color: #121212;
     --inner-color: #404040;
     --accent-color: #1bbb36;
     --accent-color-alt: #df5050;
@@ -10,6 +10,11 @@
     scroll-behavior: smooth;
     /* enforce scroll behavior */
     overflow-y: scroll;
+}
+
+/* linear-gradient */
+body {
+    background: radial-gradient(ellipse at 0% 2%, rgba(16 , 13, 56, .3) 0%, transparent 100%) var(--bg-color);
 }
 
 body {
@@ -75,16 +80,16 @@ a {
     color: var(--accent-color);
 }
 
-.center {
-    justify-self: center;
-    transform: translateX(-50%);
+.flex-align-horz {
+    display: flex;
+    flex-direction: column;
 }
 
 .content {
-    margin-bottom: 10%;
-    margin-top: 10%;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
 
-    max-width: 45vw;
+    max-width: 45dvw;
     width: 100%;
 }
 
@@ -95,7 +100,7 @@ a {
 }
 .inner-block {
     background-color: var(--inner-color);
-    padding: 1rem 5% 1.5rem 5%;
+    padding: .5rem 5% 1rem 5%;
 }
 
 .hide-link {
@@ -103,10 +108,13 @@ a {
 	text-decoration: none;
 }
 
+
 .instruction-table {
     width: 100%;
     margin-top: 1em;
-    margin-bottom: 1em;
+
+    border-collapse: separate;
+    border-spacing: 0 .5rem;
 }
 
 .instruction-table td {
