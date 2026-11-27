@@ -19,77 +19,109 @@ const argNames = {
     'Dimensional Sacrifice': ['Bonus'],
 }
 
+// cache fetch responses.
+const cache = {}
+
 function updateSpinboxes() {
-    const g = Number(galaxiesSpinbox.value);
-    dimboostsSpinbox.max = maxDimboosts[g];
-    if (Number(dimboostsSpinbox.value) > Number(dimboostsSpinbox.max)) {
-        dimboostsSpinbox.value = dimboostsSpinbox.max
+    // parseInt is safer than Number(). 
+    const val = parseInt(galaxiesSpinbox.value);
+    const max = parseInt(dimboostsSpinbox.max = maxDimboosts[val]);
+
+    if (parseInt(dimboostsSpinbox.value) > max) {
+        dimboostsSpinbox.value = max;
     }
 }
 
 function clampSpinboxes() {
-    if (Number(dimboostsSpinbox.value) > Number(dimboostsSpinbox.max)) {
+    const dimboostval = parseInt(dimboostsSpinbox.value);
+    const dimboostmax = parseInt(dimboostsSpinbox.max);
+    const dimboostmin = parseInt(dimboostsSpinbox.min);
+
+    const galaxyval = parseInt(galaxiesSpinbox.value);
+    const galaxymax = parseInt(galaxiesSpinbox.max);
+    const galaxymin = parseInt(galaxiesSpinbox.min);
+
+    if (dimboostval > dimboostmax) {
         dimboostsSpinbox.value = dimboostsSpinbox.max
-    }
-    if (Number(dimboostsSpinbox.value) < Number(dimboostsSpinbox.min)) {
+    } else if (dimboostval < dimboostmin) {
         dimboostsSpinbox.value = dimboostsSpinbox.min
     }
-    if (Number(galaxiesSpinbox.value) > Number(galaxiesSpinbox.max)) {
+
+    if (galaxyval > galaxymax) {
         galaxiesSpinbox.value = galaxiesSpinbox.max
-    }
-    if (Number(galaxiesSpinbox.value) < Number(galaxiesSpinbox.min)) {
+    } else if (galaxyval < galaxymin) {
         galaxiesSpinbox.value = galaxiesSpinbox.min
     }
 }
 
+async function getOrCacheFetchable(path) {
+    if (path in cache) {
+        return cache[path];
+    } else {
+        try {
+            var data = await fetch(path);
+            var json = await data.json();
+
+        } catch(e) {
+            throw new Error(e);
+        }
+
+        cache[path] = json;
+
+        return json;
+    }
+}
+
+// the instruction name is the hint. 
+function handlehint(hint) {
+    if (hint.includes('Konami')) {
+        const cell = document.createElement('span');
+
+        cell.className = 'hint';
+        cell.textContent = hint;
+
+        cell.dataset.tooltip = `
+        Input most of konami code (up, up, down, down, left, right, left, right, B, A)
+        before buying 1st Dimension, then press Enter immediately after.
+        After doing that, export the save as soon as possible, then reimport it repeatedly
+        for 30 seconds to get Achievement 44 - this saves some time in several dimboosts.
+        `;
+
+        return cell;
+    // default to returning a cell with textcontent as the hint, to allow handlehint to be in charge of the name
+    // as well as the node itself.
+    } else {
+        const cell = document.createElement("span");
+        cell.textContent = hint;
+
+        return cell;
+    }
+}
+
 async function loadInstructions() {
-    const g = Number(galaxiesSpinbox.value);
-    const d = Number(dimboostsSpinbox.value);
+    const g = parseInt(galaxiesSpinbox.value);
+    const d = parseInt(dimboostsSpinbox.value);
 
-    var response;
-    try {
-        response = await fetch(`./data/g${g}d${d}.json`);
+    const path = `./data/g${g}d${d}.json`;
+    const instructions = await getOrCacheFetchable(path);
 
-        instructionTable.previousElementSibling.hidden = false;
-        instructionTable.hidden = false;
-    } catch(e) {
-
-        instructionTable.previousElementSibling.hidden = true;
-        instructionTable.hidden = true;
-
-        throw new Error(e);
-    }
+    const maxArgs = Math.max(...instructions.map(entry => entry[1].length));
+    
     instructionTable.replaceChildren();
-    if (!response.ok) {
-        return;
-    }
-    const instructions = await response.json();
-    var maxArgs = 0;
-    for (const [_i, [_name, args]] of instructions.entries()) {
-        maxArgs = Math.max(maxArgs, args.length);
-    }
+
     for (const [i, [name, args]] of instructions.entries()) {
         const row = instructionTable.insertRow();
-        row.insertCell().textContent = `${i+1}`
         const instrName = instructionMapping[name];
-        if (instrName.includes("Konami")) {
-            const cell = document.createElement("span");
-            cell.className = "hint";
-            cell.textContent = instrName;
-            cell.dataset.tooltip = `
-            Input most of konami code (up, up, down, down, left, right, left, right, B, A)
-            before buying 1st Dimension, then press Enter immediately after.
-            After doing that, export the save as soon as possible, then reimport it repeatedly
-            for 30 seconds to get Achievement 44 - this saves some time in several dimboosts.
-            `;
-            row.insertCell().appendChild(cell);
-        } else {
-            row.insertCell().textContent = instrName;
-        }
+        const node = handlehint(instrName);
+
+        row.insertCell().appendChild(node);
+
         for (var j = 0; j < maxArgs; j++) {
             const cell = row.insertCell();
+
             if (j < args.length) {
                 if (j == 0 && args[j] == 0) continue;
+
                 cell.textContent = `${argNames[instrName][j]}: ${args[j]}`;
             }
         }

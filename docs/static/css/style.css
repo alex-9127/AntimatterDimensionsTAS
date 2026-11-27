@@ -114,7 +114,7 @@ a {
     margin-top: 1em;
 
     border-collapse: separate;
-    border-spacing: 0 .5rem;
+    border-spacing: 0px;
 }
 
 .instruction-table td {
