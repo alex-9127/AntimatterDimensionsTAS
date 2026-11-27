@@ -36,7 +36,7 @@ and are currently experimental features for running the instruction sets in a co
 with a custom prebuilt interpreter.
 
 Because of the framework, light modifications to the base game are made.
-This includes adding TAS.tick() to two parts of the original game, found in the game loop,
+This includes adding TAS.tick() to two parts of the original game found in the game loop,
 as well as hard coding the diff passed into the loop to be equal to update rate set in Options for consistency. 
 Outside of these, no additional modifications are made.
 There is no current documentation written up for the use of the TAS/TAS GUI.
